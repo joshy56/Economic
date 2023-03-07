@@ -1,0 +1,11 @@
+name: Economic
+version: '${project.version}'
+main: com.github.joshy56.economic.Economic
+api-version: 1.19
+depend: [ Vault ]
+authors: [ joshy56 ]
+description: Lightweight economy plugin
+website: https://github.com/joshy56
+libraries:
+  - org.mariadb:mariadb-java-client:3.1.2
+  - -dev.jorel:commandapi-core:3.7.6
