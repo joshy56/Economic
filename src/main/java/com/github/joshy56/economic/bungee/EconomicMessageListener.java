@@ -2,16 +2,12 @@ package com.github.joshy56.economic.bungee;
 
 import com.github.joshy56.economic.Economic;
 import com.github.joshy56.economic.storage.EconomyManager;
-import com.github.joshy56.economic.storage.EconomyStorage;
 import com.google.common.base.Strings;
 import com.google.common.io.ByteArrayDataInput;
 import com.google.common.io.ByteStreams;
 import com.google.gson.Gson;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.EventPriority;
-import org.bukkit.event.Listener;
 import org.bukkit.plugin.messaging.PluginMessageListener;
 import org.jetbrains.annotations.NotNull;
 
@@ -38,6 +34,7 @@ public class EconomicMessageListener implements PluginMessageListener {
         ByteArrayDataInput input = ByteStreams.newDataInput(message);
 
         String subChannel = input.readUTF();
+        /* Reserved switch for futures sub-channels */
         switch (subChannel) {
             case "put" -> {
                 String economyName = input.readUTF();

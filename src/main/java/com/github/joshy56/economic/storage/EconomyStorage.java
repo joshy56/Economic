@@ -12,8 +12,10 @@ import java.util.Optional;
  */
 public interface EconomyStorage {
     @NotNull Response save(@NotNull final Economy economy);
+    @NotNull Response save(@NotNull String economyName, @NotNull String playerName);
     @NotNull Response saveAll();
     @NotNull Response load(@NotNull String currencyName);
+    @NotNull Response load(@NotNull String economyName, @NotNull String playerName);
     @NotNull Response loadAll();
     @NotNull Optional<EconomyManager> manager();
     @NotNull Response attachManager(@NotNull final EconomyManager manager);

@@ -2,22 +2,19 @@ package com.github.joshy56.economic.storage;
 
 import com.github.joshy56.economic.Economic;
 import com.github.joshy56.economic.Response;
-import com.google.common.base.Predicates;
-import com.google.common.collect.Iterables;
 import com.google.common.collect.Iterators;
 import com.google.common.io.ByteArrayDataOutput;
 import com.google.common.io.ByteStreams;
 import com.google.gson.Gson;
 import net.milkbowl.vault.economy.Economy;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
 
-import java.io.ByteArrayOutputStream;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Map;
 import java.util.Optional;
-import java.util.function.Predicate;
 
 /**
  * Created by joshy23 (justJoshy23 - joshy56) on 6/3/2023.
@@ -42,7 +39,45 @@ public class BungeeEconomyStorage implements EconomyStorage {
 
         ByteArrayDataOutput output = ByteStreams.newDataOutput();
         output.writeUTF("put");
-        output.writeUTF(gson.toJson(economy));
+        output.writeUTF(economy.getName());
+        output.writeUTF(economy.currencyNameSingular());
+        output.writeUTF(economy.currencyNamePlural());
+        output.writeInt(economy.fractionalDigits());
+
+
+        Iterators.find(plugin.getServer().getOnlinePlayers().iterator(), p -> true)
+                .sendPluginMessage(plugin, Economic.PLUGIN_CHANNEL, output.toByteArray());
+        return Response.SUCCESS;
+    }
+
+    @Override
+    public @NotNull Response save(@NotNull String economyName, @NotNull String playerName) {
+        if(manager().isEmpty())
+            return Response.FAILURE;
+
+        if(plugin.getServer().getOnlinePlayers().isEmpty())
+            return Response.FAILURE;
+
+        EconomyRepository repository = manager().flatMap(EconomyManager::repository).orElse(null);
+        if(repository == null)
+            return Response.FAILURE;
+
+        if(!repository.currencies().containsKey(economyName))
+            return Response.FAILURE;
+
+        OfflinePlayer player = plugin.getServer().getOfflinePlayerIfCached(playerName);
+        if(player == null)
+            return Response.FAILURE;
+
+        Economy economy = repository.currencies().get(economyName);
+        if(!economy.hasAccount(player))
+            return Response.FAILURE;
+
+        ByteArrayDataOutput output = ByteStreams.newDataOutput();
+        output.writeUTF("put");
+        output.writeUTF(economyName);
+        output.writeUTF(playerName);
+        output.writeDouble(economy.getBalance(player));
 
         Iterators.find(plugin.getServer().getOnlinePlayers().iterator(), p -> true)
                 .sendPluginMessage(plugin, Economic.PLUGIN_CHANNEL, output.toByteArray());
@@ -79,6 +114,39 @@ public class BungeeEconomyStorage implements EconomyStorage {
         ByteArrayDataOutput output = ByteStreams.newDataOutput();
         output.writeUTF("get");
         output.writeUTF(currencyName);
+
+        Iterators.find(plugin.getServer().getOnlinePlayers().iterator(), p -> true)
+                .sendPluginMessage(plugin, Economic.PLUGIN_CHANNEL, output.toByteArray());
+        return Response.SUCCESS;
+    }
+
+    @Override
+    public @NotNull Response load(@NotNull String economyName, @NotNull String playerName) {
+        if(manager().isEmpty())
+            return Response.FAILURE;
+
+        if(plugin.getServer().getOnlinePlayers().isEmpty())
+            return Response.FAILURE;
+
+        EconomyRepository repository = manager().flatMap(EconomyManager::repository).orElse(null);
+        if(repository == null)
+            return Response.FAILURE;
+
+        if(!repository.currencies().containsKey(economyName))
+            return Response.FAILURE;
+
+        OfflinePlayer player = plugin.getServer().getOfflinePlayerIfCached(playerName);
+        if(player == null)
+            return Response.FAILURE;
+
+        Economy economy = repository.currencies().get(economyName);
+        if(!economy.hasAccount(player))
+            return Response.FAILURE;
+
+        ByteArrayDataOutput output = ByteStreams.newDataOutput();
+        output.writeUTF("get");
+        output.writeUTF(economyName);
+        output.writeUTF(playerName);
 
         Iterators.find(plugin.getServer().getOnlinePlayers().iterator(), p -> true)
                 .sendPluginMessage(plugin, Economic.PLUGIN_CHANNEL, output.toByteArray());
