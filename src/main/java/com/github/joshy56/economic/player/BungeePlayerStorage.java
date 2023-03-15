@@ -1,7 +1,10 @@
 package com.github.joshy56.economic.player;
 
+import com.github.joshy56.economic.Economic;
 import com.github.joshy56.economic.Response;
 import com.github.joshy56.economic.storage.EconomyManager;
+import com.github.joshy56.economic.storage.EconomyRepository;
+import com.github.joshy56.economic.storage.EconomyStorage;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Optional;
@@ -9,13 +12,32 @@ import java.util.Optional;
 /**
  * Created by joshy23 (justJoshy23 - joshy56) on 8/3/2023.
  */
-public class BungeePlayerStorage implements PlayerStorage {
-    private PlayerManager manager;
+public class BungeePlayerStorage extends AbstractPlayerStorage {
+    private final Economic plugin;
 
-
+    public BungeePlayerStorage(@NotNull final Economic plugin) {
+        this.plugin = plugin;
+    }
 
     @Override
     public @NotNull Response save(@NotNull String economyName, @NotNull String playerName) {
+        if(manager().isEmpty())
+            return Response.FAILURE;
+
+        
+
+        if(plugin.bungeeManager().isEmpty())
+            return Response.FAILURE;
+
+        EconomyManager economyManager = plugin.bungeeManager().get();
+        if(economyManager.storage().isEmpty() || economyManager.repository().isEmpty())
+            return Response.FAILURE;
+
+        EconomyRepository economyRepository = economyManager.repository().get();
+        if(!economyRepository.currencies().containsKey(economyName) && economyManager.storage().map(economyStorage -> economyStorage.load(economyName)).orElse(Response.FAILURE) != Response.SUCCESS)
+            return Response.FAILURE;
+
+
         return null;
     }
 
@@ -42,38 +64,5 @@ public class BungeePlayerStorage implements PlayerStorage {
     @Override
     public @NotNull Response loadAll() {
         return null;
-    }
-
-    @Override
-    public @NotNull Optional<PlayerManager> manager() {
-        if(manager == null)
-            return Optional.empty();
-
-        if(manager.storage().filter(storage -> storage.equals(this)).isEmpty())
-            manager = null;
-
-        return Optional.ofNullable(manager);
-    }
-
-    @Override
-    public @NotNull Response attachManager(@NotNull PlayerManager manager) {
-        if(manager().isPresent())
-            return Response.FAILURE;
-
-        PlayerStorage actual = manager.storage().orElse(this);
-
-        if(!actual.equals(this))
-            return Response.FAILURE;
-
-        this.manager = manager;
-        return Response.SUCCESS;
-    }
-
-    @Override
-    public @NotNull Response detachManager() {
-        if(manager != null)
-            manager = null;
-
-        return Response.SUCCESS;
     }
 }

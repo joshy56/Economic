@@ -16,9 +16,8 @@ import java.util.Optional;
 /**
  * Created by joshy23 (justJoshy23 - joshy56) on 7/3/2023.
  */
-public class MySqlEconomyStorage implements EconomyStorage {
+public class MySqlEconomyStorage extends AbstractEconomyStorage {
     private final Gson gson;
-    private EconomyManager manager;
     private Connection connection;
 
     public MySqlEconomyStorage(@NotNull final Gson gson, @NotNull String urlConnection) {
@@ -64,35 +63,5 @@ public class MySqlEconomyStorage implements EconomyStorage {
     @Override
     public @NotNull Response loadAll() {
         return null;
-    }
-
-    @Override
-    public @NotNull Optional<EconomyManager> manager() {
-        if(manager == null)
-            return Optional.empty();
-
-        if(manager.storage().filter(storage -> storage.equals(this)).isEmpty())
-            detachManager();
-
-        return Optional.ofNullable(manager);
-    }
-
-    @Override
-    public @NotNull Response attachManager(@NotNull EconomyManager manager) {
-        EconomyManager actual = manager().orElse(manager);
-
-        if(actual.storage().filter(storage -> storage.equals(this)).isEmpty())
-            return Response.FAILURE;
-
-        this.manager = manager;
-        return Response.SUCCESS;
-    }
-
-    @Override
-    public @NotNull Response detachManager() {
-        if(manager != null)
-            manager = null;
-
-        return Response.SUCCESS;
     }
 }

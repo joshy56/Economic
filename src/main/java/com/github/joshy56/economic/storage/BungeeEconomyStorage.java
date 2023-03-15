@@ -19,10 +19,9 @@ import java.util.Optional;
 /**
  * Created by joshy23 (justJoshy23 - joshy56) on 6/3/2023.
  */
-public class BungeeEconomyStorage implements EconomyStorage {
+public class BungeeEconomyStorage extends AbstractEconomyStorage {
     private final Plugin plugin;
     private final Gson gson;
-    private EconomyManager manager;
 
     public BungeeEconomyStorage(@NotNull final Plugin plugin, @NotNull final Gson gson) {
         this.plugin = plugin;
@@ -170,32 +169,5 @@ public class BungeeEconomyStorage implements EconomyStorage {
         }
 
         return (failed) ? Response.FAILURE : Response.SUCCESS;
-    }
-
-    @Override
-    public @NotNull Optional<EconomyManager> manager() {
-        if(manager == null)
-            return Optional.empty();
-
-        if(manager.storage().filter(storage -> !storage.equals(this)).isPresent())
-            manager = null;
-
-        return Optional.ofNullable(manager);
-    }
-
-    @Override
-    public @NotNull Response attachManager(@NotNull EconomyManager manager) {
-        if(!(manager instanceof BungeeEconomyManager))
-            return Response.FAILURE;
-
-        this.manager = manager().orElse(manager);
-        return Response.SUCCESS;
-    }
-
-    @Override
-    public @NotNull Response detachManager() {
-        if(manager != null)
-            manager = null;
-        return Response.SUCCESS;
     }
 }

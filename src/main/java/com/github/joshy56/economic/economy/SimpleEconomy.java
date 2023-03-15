@@ -80,7 +80,7 @@ public class SimpleEconomy implements Economy {
      */
     @Override
     public String format(double amount) {
-        return null;
+        return String.format("%." + fractionalDigits() + "f", amount);
     }
 
     /**
