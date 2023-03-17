@@ -6,7 +6,7 @@ import org.jetbrains.annotations.NotNull;
 /**
  * Created by joshy23 (justJoshy23 - joshy56) on 9/3/2023.
  */
-public class MySqlPlayerStorage extends AbstractPlayerStorage {
+public class MySqlPlayerStorage extends SimplePlayerStorage {
     @Override
     public @NotNull Response save(@NotNull String economyName, @NotNull String playerName) {
         return null;

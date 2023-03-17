@@ -14,5 +14,5 @@ public interface PlayerManager {
     @NotNull Response attachStorage(@NotNull final PlayerStorage storage);
     @NotNull Response attachRepository(@NotNull final PlayerRepository repository);
     @NotNull Response detachStorage();
-    @NotNull Response detachRepostory();
+    @NotNull Response detachRepository();
 }

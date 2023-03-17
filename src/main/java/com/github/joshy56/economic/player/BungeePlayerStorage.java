@@ -4,15 +4,12 @@ import com.github.joshy56.economic.Economic;
 import com.github.joshy56.economic.Response;
 import com.github.joshy56.economic.storage.EconomyManager;
 import com.github.joshy56.economic.storage.EconomyRepository;
-import com.github.joshy56.economic.storage.EconomyStorage;
 import org.jetbrains.annotations.NotNull;
-
-import java.util.Optional;
 
 /**
  * Created by joshy23 (justJoshy23 - joshy56) on 8/3/2023.
  */
-public class BungeePlayerStorage extends AbstractPlayerStorage {
+public class BungeePlayerStorage extends SimplePlayerStorage {
     private final Economic plugin;
 
     public BungeePlayerStorage(@NotNull final Economic plugin) {

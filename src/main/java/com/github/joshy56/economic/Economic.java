@@ -1,6 +1,7 @@
 package com.github.joshy56.economic;
 
 import com.github.joshy56.economic.bungee.EconomicMessageListener;
+import com.github.joshy56.economic.player.PlayerAccountCredentials;
 import com.github.joshy56.economic.storage.BungeeEconomyManager;
 import com.github.joshy56.economic.storage.BungeeEconomyRepository;
 import com.github.joshy56.economic.storage.BungeeEconomyStorage;

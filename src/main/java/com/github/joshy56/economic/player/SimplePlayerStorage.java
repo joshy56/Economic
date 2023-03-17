@@ -8,7 +8,7 @@ import java.util.Optional;
 /**
  * Created by joshy23 (justJoshy23 - joshy56) on 9/3/2023.
  */
-public abstract class AbstractPlayerStorage implements PlayerStorage {
+public abstract class SimplePlayerStorage implements PlayerStorage {
     private PlayerManager manager;
 
     @Override
